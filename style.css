@@ -1,0 +1,217 @@
+:root {
+  --bar-height: 64px;
+  --bar-bg: #ffffff;
+  --bar-border: #e6e6e6;
+  --text: #1f2937;
+  --muted: #6b7280;
+  --accent: #0ea5e9;
+  --surface: #ffffff;
+  --surface-hover: #f5f5f5;
+  --shadow: 0 1px 3px rgba(0,0,0,.12), 0 1px 2px rgba(0,0,0,.06);
+  --ripple: rgba(0,0,0,0.12);
+  --radius: 14px;
+  --danger: #ef4444;
+}
+
+/* Reset ringkas */
+*,
+*::before,
+*::after { box-sizing: border-box; }
+html, body { height: 100%; }
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  color: var(--text);
+  background: #fafafa;
+}
+
+/* Konten utama */
+.app-content {
+  min-height: 100%;
+  padding: 16px;
+  padding-bottom: calc(var(--bar-height) + env(safe-area-inset-bottom, 0px) + 16px);
+}
+
+/* Judul tiap tab */
+.tab-pane h1 {
+  margin: 4px 0 12px;
+  font-size: 20px;
+}
+
+/* Grid tombol (3 kolom) */
+.grid-btns {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+/* Tombol kotak */
+.app-button {
+  display: grid;
+  place-items: center;
+  gap: 6px;
+  padding: 14px 8px;
+  border: 0;
+  border-radius: var(--radius);
+  background: var(--surface);
+  box-shadow: var(--shadow);
+  cursor: pointer;
+  transition: transform .06s ease, background .2s ease;
+  -webkit-tap-highlight-color: transparent;
+  text-decoration: none; /* untuk <a> */
+  color: inherit;
+}
+.app-button:active { transform: scale(.98); background: var(--surface-hover); }
+.app-button i, .app-button svg { width: 24px; height: 24px; }
+.app-button span { font-size: 12px; color: var(--text); }
+
+/* Tab dasar */
+.tab-pane { display: none; animation: fade .2s ease-in; }
+.tab-pane.is-active { display: block; }
+@keyframes fade { from { opacity: 0 } to { opacity: 1 } }
+
+/* Bottom bar (6 kolom) */
+.bottom-bar {
+  position: fixed;
+  left: 0; right: 0; bottom: 0;
+  height: calc(var(--bar-height) + env(safe-area-inset-bottom, 0px));
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  background: var(--bar-bg);
+  border-top: 1px solid var(--bar-border);
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  align-items: stretch;
+  z-index: 50;
+}
+
+/* Item bar */
+.bar-item {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  padding: 6px 4px 8px;
+  display: grid;
+  grid-template-rows: auto auto;
+  place-items: center;
+  font: inherit;
+  color: var(--muted);
+  position: relative;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.bar-item i, .bar-item svg { width: 22px; height: 22px; }
+.bar-item span { font-size: 12px; line-height: 1; margin-top: 4px; }
+.bar-item.is-active { color: var(--accent); }
+
+/* Ripple sederhana */
+.bar-item .ripple {
+  position: absolute;
+  inset: 0;
+  border-radius: 12px;
+  pointer-events: none;
+  transform: scale(0);
+  opacity: 0;
+  background: var(--ripple);
+}
+.bar-item:active .ripple { animation: ripple .35s ease-out; }
+@keyframes ripple {
+  from { transform: scale(0); opacity: .3; }
+  to   { transform: scale(1); opacity: 0; }
+}
+
+/* ====== APLIKASI TUGAS (inline) ====== */
+.task-inline { 
+  margin-top: 16px; 
+  background: var(--surface);
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+  box-shadow: var(--shadow);
+  padding: 14px;
+}
+.task-inline__header { 
+  display: flex; align-items: center; justify-content: space-between; 
+  margin-bottom: 8px;
+}
+.task-form { display: grid; gap: 12px; }
+.form-row { display: grid; gap: 6px; }
+.form-row.two { grid-template-columns: 1fr 1fr; gap: 12px; }
+label { font-size: 13px; color: var(--muted); }
+.req { color: #ef4444; margin-left: 4px; }
+input[type="text"], input[type="date"], input[type="number"] {
+  width: 100%; padding: 10px 12px; border-radius: 10px;
+  border: 1px solid #e5e7eb; outline: none; background: #fff;
+}
+input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(14,165,233,.2); }
+
+.form-actions {
+  display: flex; gap: 8px; flex-wrap: wrap; margin-top: 4px;
+}
+.btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 10px 14px; border: 0; border-radius: 12px;
+  background: var(--surface); box-shadow: var(--shadow);
+  cursor: pointer;
+}
+.btn.primary { background: var(--accent); color: #fff; box-shadow: none; }
+.btn.danger { background: var(--danger); color: #fff; box-shadow: none; }
+.btn i, .btn svg { width: 18px; height: 18px; }
+
+/* Tabel tugas */
+.task-list-wrap { margin-top: 12px; }
+.task-list-head {
+  display: flex; align-items: center; justify-content: space-between; gap: 8px;
+  margin-bottom: 8px;
+}
+.table-wrap { overflow: auto; border: 1px solid #e5e7eb; border-radius: 12px; }
+.task-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.task-table thead th {
+  text-align: left; background: #f9fafb; color: #374151;
+  padding: 10px; position: sticky; top: 0;
+}
+.task-table tbody td { padding: 10px; border-top: 1px solid #f0f0f0; }
+.task-table td .row-actions { display: inline-flex; gap: 6px; }
+.row-actions .icon-btn { width: 30px; height: 30px; }
+
+/* Responsif kecil */
+@media (max-width: 520px) {
+  .form-row.two { grid-template-columns: 1fr; }
+}
+
+/* Tambahan utilitas */
+.task-table tr.is-done td { text-decoration: line-through; color: #6b7280; }
+.task-table img.thumb { width: 56px; height: 56px; object-fit: cover; border-radius: 8px; display: block; }
+.task-table td.photo-cell { vertical-align: middle; }
+.hint { font-size: 12px; color: #6b7280; }
+/* --- Animasi ripple & press --- */
+.is-pressing {
+  transform: scale(0.98);
+  transition: transform 80ms ease-out;
+}
+
+.ripple-circle {
+  position: absolute;
+  border-radius: 50%;
+  background: currentColor;
+  opacity: 0.18;
+  transform: scale(0);
+  pointer-events: none;
+  animation: ripple-pop .5s ease-out forwards;
+}
+
+@keyframes ripple-pop {
+  to { transform: scale(1); opacity: 0; }
+}
+
+/* --- Fade-in tab saat aktif --- */
+.tab-pane.fade-in {
+  animation: tabFade .22s ease-out;
+}
+@keyframes tabFade {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* (opsional) agar animasi tidak terganggu */
+.app-button, .btn, .bar-item {
+  will-change: transform;
+}
