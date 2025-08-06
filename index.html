@@ -1,376 +1,163 @@
 <!DOCTYPE html>
-<html lang="en" >
-<head>
-  <meta charset="UTF-8">
-  <title>Untitled</title>
-  <link rel="stylesheet" href="./style.css">
-
-</head>
-<body>
-<!-- partial:index.partial.html -->
-<!doctype html>
 <html lang="id">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Aplikasi Multi Menu</title>
-  <link rel="stylesheet" href="styles.css" />
-  <!-- Muat Lucide & script secara defer agar urutan aman -->
-  <script defer src="https://unpkg.com/lucide@latest"></script>
-  <script defer src="script.js"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Job Desk OCS NFI</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 1rem;
+      margin: 0;
+      background: #f3f3f3;
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 1rem;
+    }
+
+    .container {
+      background: #fff;
+      padding: 1rem;
+      border-radius: 10px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      margin-bottom: 1rem;
+    }
+
+    label {
+      font-weight: bold;
+      margin-top: 1rem;
+      display: block;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 0.5rem;
+      margin-top: 0.3rem;
+      margin-bottom: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 1rem;
+    }
+
+    .durasi-group {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .durasi-group input {
+      flex: 1;
+    }
+
+    button {
+      background: #0d47a1;
+      color: #fff;
+      padding: 0.8rem 1rem;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      width: 100%;
+    }
+
+    #hasil {
+      white-space: pre-wrap;
+      background: #e3f2fd;
+      padding: 1rem;
+      border-radius: 10px;
+      margin-top: 1rem;
+    }
+  </style>
 </head>
 <body>
-  <main class="app-content">
-    <!-- ===================== BERANDA ===================== -->
-    <section id="tab-beranda" class="tab-pane is-active">
-      <h1>Beranda</h1>
-      <div class="grid-btns">
-        <!-- Informasi Terbaru -->
-        <a class="app-button" id="beranda-info"
-           href="https://docs.google.com/document/d/1rmVbRxSudLXjAU_U_K871s52cgZj-u8_B-XpGWKTVdA/edit?usp=drive_link"
-           target="_blank" rel="noopener">
-          <i data-lucide="info"></i>
-          <span>Informasi Terbaru</span>
-        </a>
 
-        <!-- All Members -->
-        <button class="app-button" id="beranda-members">
-          <i data-lucide="users"></i>
-          <span>All Members</span>
-        </button>
+  <h2>Job Desk OCS NFI</h2>
 
-        <!-- Hubungi pak Ayub -->
-        <a class="app-button" id="beranda-ayub"
-           href="https://wa.me/6289637126728"
-           target="_blank" rel="noopener">
-          <i data-lucide="phone"></i>
-          <span>Hubungi pak Ayub</span>
-        </a>
+  <div class="container">
+    <label for="tanggal">Pilih Hari dan Tanggal:</label>
+    <input type="date" id="tanggal" onchange="updateHari()" />
+    <div id="hari"></div>
 
-        <!-- Hubungi pak Sadulloh -->
-        <a class="app-button" id="beranda-sadulloh"
-           href="https://wa.me/6285281587927"
-           target="_blank" rel="noopener">
-          <i data-lucide="phone"></i>
-          <span>Hubungi pak Sadulloh</span>
-        </a>
-      </div>
-    </section>
+    <div id="pekerjaan-container"></div>
 
-    <!-- ===================== JADWAL (FORM TUGAS) ===================== -->
-    <section id="tab-jadwal" class="tab-pane">
-      <h1>Jadwal</h1>
+    <button onclick="generateClipboard()">📋 Salin Job Desk</button>
 
-      <section aria-label="Aplikasi Tugas" class="task-inline">
-        <header class="task-inline__header">
-          <h2 id="task-title">Aplikasi Tugas</h2>
-        </header>
-
-        <form id="task-form" class="task-form" autocomplete="off">
-          <div class="form-row">
-            <label for="namaPekerjaan">Nama Pekerjaan<span class="req">*</span></label>
-            <input type="text" id="namaPekerjaan" name="namaPekerjaan" required placeholder="Contoh: Audit Gudang" />
-          </div>
-
-          <div class="form-row">
-            <label for="area">Area</label>
-            <input type="text" id="area" name="area" placeholder="Contoh: Jakarta Timur" />
-          </div>
-
-          <div class="form-row two">
-            <div>
-              <label for="pembuat">Pembuat Tugas</label>
-              <input type="text" id="pembuat" name="pembuat" placeholder="Nama pembuat" />
-            </div>
-            <div>
-              <label for="penerima">Penerima Tugas</label>
-              <input type="text" id="penerima" name="penerima" placeholder="Nama penerima" />
-            </div>
-          </div>
-
-          <div class="form-row two">
-            <div>
-              <label for="tanggalPengerjaan">Tanggal Pengerjaan</label>
-              <input type="date" id="tanggalPengerjaan" name="tanggalPengerjaan" />
-            </div>
-            <div>
-              <label for="dueDate">Due Date</label>
-              <input type="date" id="dueDate" name="dueDate" />
-            </div>
-          </div>
-
-          <!-- Durasi Pengerjaan (jam) -->
-          <div class="form-row">
-            <label for="durasiJam">Durasi Pengerjaan (jam)</label>
-            <input type="number" id="durasiJam" name="durasiJam"
-                   min="0" step="0.5" placeholder="Contoh: 2 atau 2.5" />
-          </div>
-
-          <div class="form-row">
-            <label for="foto">Foto (opsional)</label>
-            <input type="file" id="foto" name="foto" accept="image/*" capture="environment" />
-            <small class="hint">Foto dikompresi otomatis agar hemat penyimpanan.</small>
-          </div>
-
-          <div class="form-actions">
-            <button type="submit" class="btn primary"><i data-lucide="save"></i><span>Simpan Tugas</span></button>
-            <button type="reset" class="btn"><i data-lucide="rotate-ccw"></i><span>Reset</span></button>
-          </div>
-        </form>
-
-        <hr class="divider" />
-
-        <!-- Daftar Tugas (tampil juga di Job Desk) -->
-        <section aria-label="Daftar Tugas" class="task-list-wrap">
-          <div class="task-list-head">
-            <h3>Daftar Tugas</h3>
-            <button id="clear-tasks" class="btn danger"><i data-lucide="trash-2"></i><span>Hapus Semua</span></button>
-          </div>
-
-          <div class="table-wrap">
-            <table class="task-table">
-              <thead>
-                <tr>
-                  <th>Nama Pekerjaan</th>
-                  <th>Area</th>
-                  <th>Pembuat</th>
-                  <th>Penerima</th>
-                  <th>Tgl Kerja</th>
-                  <th>Due Date</th>
-                  <th>Durasi (Jam)</th>
-                  <th>Foto</th>
-                  <th>Aksi</th>
-                </tr>
-              </thead>
-              <tbody id="task-tbody"></tbody>
-            </table>
-          </div>
-        </section>
-      </section>
-    </section>
-
-    <!-- ===================== JOB DESK (DAFTAR TUGAS) ===================== -->
-    <section id="tab-jobdesk" class="tab-pane">
-      <h1>Job Desk</h1>
-      <section aria-label="Daftar Tugas (Job Desk)" class="task-list-wrap">
-        <div class="table-wrap">
-          <table class="task-table">
-            <thead>
-              <tr>
-                <th scope="col">Nama Pekerjaan</th>
-                <th scope="col">Area</th>
-                <th scope="col">Pembuat</th>
-                <th scope="col">Penerima</th>
-                <th scope="col">Tgl Kerja</th>
-                <th scope="col">Due Date</th>
-                <th scope="col">Durasi (Jam)</th>
-                <th scope="col">Foto</th>
-                <th scope="col">Aksi</th>
-              </tr>
-            </thead>
-            <tbody id="jobdesk-tbody"></tbody>
-          </table>
-        </div>
-      </section>
-    </section>
-
-    <!-- ===================== LAPORAN ===================== -->
-    <section id="tab-laporan" class="tab-pane">
-      <h1>Laporan</h1>
-      <div class="grid-btns">
-        <!-- Upload Foto Otomatis -->
-        <a class="app-button" id="lap-upload-otomatis"
-           href="https://poharaayub.github.io/ocsnfiuploadcam/"
-           target="_blank" rel="noopener">
-          <i data-lucide="upload-cloud"></i>
-          <span>Upload Foto Otomatis</span>
-        </a>
-
-        <!-- Upload ke Grup Whatsapp OCS NFI -->
-        <a class="app-button" id="lap-wa-ocs-nfi"
-           href="https://chat.whatsapp.com/KnxTC4uGQdGI6WAAVh0UGg?mode=ac_t"
-           target="_blank" rel="noopener">
-          <i data-lucide="send"></i>
-          <span>Upload ke Grup Whatsapp OCS NFI</span>
-        </a>
-
-        <!-- Upload ke pak Ayub -->
-        <a class="app-button" id="lap-upload-ayub"
-           href="https://wa.me/6289637126728"
-           target="_blank" rel="noopener">
-          <i data-lucide="user"></i>
-          <span>Upload ke pak Ayub</span>
-        </a>
-
-        <!-- Upload ke pak Sadulloh -->
-        <a class="app-button" id="lap-upload-sadulloh"
-           href="https://wa.me/6285281587927"
-           target="_blank" rel="noopener">
-          <i data-lucide="user"></i>
-          <span>Upload ke pak Sadulloh</span>
-        </a>
-
-        <!-- Laporan Pencucian Box -->
-        <a class="app-button" id="lap-cuci-box"
-           href="https://docs.google.com/spreadsheets/d/1lRBJ97KsNf0aDqUaJWTYrVLdUyqLPf6Vclg5lE-GE4c/edit?usp=drivesdk"
-           target="_blank" rel="noopener">
-          <i data-lucide="clipboard-list"></i>
-          <span>Laporan Pencucian Box</span>
-        </a>
-
-        <!-- Laporan Pencucian Pallet -->
-        <a class="app-button" id="lap-cuci-pallet"
-           href="https://docs.google.com/spreadsheets/d/1H723dS1_qyLRRxctsvDHo57HBkkWNu2OJGC6UripZw4/edit?usp=drivesdk"
-           target="_blank" rel="noopener">
-          <i data-lucide="clipboard-list"></i>
-          <span>Laporan Pencucian Pallet</span>
-        </a>
-      </div>
-    </section>
-
-    <!-- ===================== ABSENSI ===================== -->
-    <section id="tab-absensi" class="tab-pane">
-      <h1>Absensi</h1>
-      <div class="grid-btns">
-        <!-- Greatday Apps -->
-        <a class="app-button" id="abs-greatday"
-           href="https://app.greatdayhr.com/features/home/home-web"
-           target="_blank" rel="noopener">
-          <i data-lucide="smartphone"></i>
-          <span>Greatday Apps</span>
-        </a>
-
-        <!-- Cek Data Rekapitulasi Absensi -->
-        <a class="app-button" id="abs-rekap"
-           href="https://drive.google.com/drive/folders/1ioHzqREUtxdTDu-nmUXKObklFTTem4JN"
-           target="_blank" rel="noopener">
-          <i data-lucide="clipboard-list"></i>
-          <span>Cek Data Rekapitulasi Absensi</span>
-        </a>
-
-        <!-- Ajukan Izin ke pak Ayub -->
-        <a class="app-button" id="abs-izin-ayub"
-           href="https://wa.me/6289637126728?text=Halo%20pak%20Ayub%2C%20Saya%20ingin%20mengajukan%20izin%20absensi"
-           target="_blank" rel="noopener">
-          <i data-lucide="user"></i>
-          <span>Ajukan Izin ke pak Ayub</span>
-        </a>
-
-        <!-- Ajukan Izin ke pak Sadulloh -->
-        <a class="app-button" id="abs-izin-sadulloh"
-           href="https://wa.me/6285281587927?text=Halo%20pak%20Sadulloh%2C%20Saya%20ingin%20mengajukan%20izin%20absensi"
-           target="_blank" rel="noopener">
-          <i data-lucide="user"></i>
-          <span>Ajukan Izin ke pak Sadulloh</span>
-        </a>
-
-        <!-- Ajukan Tukar Shift -->
-        <a class="app-button" id="abs-shift"
-           href="https://wa.me/6285281587927?text=Halo%20pak%2C%20Ayub%20saya%20ingin%20mengajukan%20tukar%20shift%20absensi"
-           target="_blank" rel="noopener">
-          <i data-lucide="refresh-cw"></i>
-          <span>Ajukan Tukar Shift</span>
-        </a>
-      </div>
-    </section>
-
-    <!-- ===================== LAINNYA ===================== -->
-    <section id="tab-lainnya" class="tab-pane">
-      <h1>Lainnya</h1>
-      <div class="grid-btns">
-        <!-- Data Peralatan & Alat Bantu Kerja -->
-        <a class="app-button" id="lain-data-peralatan"
-           href="https://docs.google.com/spreadsheets/d/1A7Q9uFPA7kmCzE8prd3IyG2cknLsGISm-RcW7G_4gD8/edit?usp=drivesdk"
-           target="_blank" rel="noopener">
-          <i data-lucide="package"></i>
-          <span>Data Peralatan & Alat Bantu Kerja</span>
-        </a>
-
-        <!-- Program Uang Kas 2025 -->
-        <a class="app-button" id="lain-uang-kas"
-           href="https://docs.google.com/spreadsheets/d/1gOX1bHVao0o1DroJS2Ri-VPSKAzUHwyOVSy8bBgXZOI/edit?usp=drivesdk"
-           target="_blank" rel="noopener">
-          <i data-lucide="wallet"></i>
-          <span>Program Uang Kas 2025</span>
-        </a>
-
-        <!-- OCS GLOBAL SERVICES INDONESIA -->
-        <a class="app-button" id="lain-ocs-global"
-           href="https://www.google.com/url?sa=t&source=web&rct=j&opi=89978449&url=https://www.instagram.com/ocsindonesia/&ved=2ahUKEwiHmfz06eSOAxXZ3jgGHav1HIgQjjh6BAgJEAE&usg=AOvVaw3OGRoFZbGLumiCyEoLJicI"
-           target="_blank" rel="noopener">
-          <i data-lucide="building-2"></i>
-          <span>OCS GLOBAL SERVICES INDONESIA</span>
-        </a>
-      </div>
-    </section>
-
-   <!-- ===================== ALL MEMBERS ===================== -->
-<section id="tab-members" class="tab-pane">
-  <h1>All Members</h1>
-
-  <!-- Tombol WhatsApp per anggota -->
-  <div class="grid-btns">
-    <a class="app-button" id="wa-ayub" href="https://wa.me/6289637126728" target="_blank" rel="noopener">
-      <i data-lucide="phone"></i><span>Pohara Ayub</span>
-    </a>
-    <a class="app-button" id="wa-sadulloh" href="https://wa.me/6285281587927" target="_blank" rel="noopener">
-      <i data-lucide="phone"></i><span>Sadulloh</span>
-    </a>
-    <a class="app-button" id="wa-edi" href="https://wa.me/6285883524329" target="_blank" rel="noopener">
-      <i data-lucide="phone"></i><span>Edi Ahmad Jubaedi</span>
-    </a>
-    <a class="app-button" id="wa-saiful" href="https://wa.me/6281389327308" target="_blank" rel="noopener">
-      <i data-lucide="phone"></i><span>Saiful Bahri</span>
-    </a>
-    <a class="app-button" id="wa-wahidin" href="https://wa.me/6283819602330" target="_blank" rel="noopener">
-      <i data-lucide="phone"></i><span>Wahidin</span>
-    </a>
-    <a class="app-button" id="wa-ade" href="https://wa.me/6281947172711" target="_blank" rel="noopener">
-      <i data-lucide="phone"></i><span>Ade Surahman</span>
-    </a>
-    <a class="app-button" id="wa-amrullah" href="https://wa.me/6283879624040" target="_blank" rel="noopener">
-      <i data-lucide="phone"></i><span>Amrullah</span>
-    </a>
-    <a class="app-button" id="wa-siti" href="https://wa.me/6285771090915" target="_blank" rel="noopener">
-      <i data-lucide="phone"></i><span>Siti Maemunah</span>
-    </a>
-    <a class="app-button" id="wa-sulaiman" href="https://wa.me/6285716230391" target="_blank" rel="noopener">
-      <i data-lucide="phone"></i><span>Sulaiman</span>
-    </a>
-    <a class="app-button" id="wa-toni" href="https://wa.me/6281286448626" target="_blank" rel="noopener">
-      <i data-lucide="phone"></i><span>Muhammad Toni</span>
-    </a>
-    <a class="app-button" id="wa-rifai" href="https://wa.me/6285810611074" target="_blank" rel="noopener">
-      <i data-lucide="phone"></i><span>M. Rifai</span>
-    </a>
+    <div id="hasil"></div>
   </div>
-</section>
 
-  <!-- Bottom Bar: Beranda – Jadwal – Job Desk – Laporan – Absensi – Lainnya -->
-  <nav class="bottom-bar" role="navigation" aria-label="Menu bawah">
-    <button class="bar-item is-active" data-target="tab-beranda" aria-label="Beranda">
-      <i data-lucide="home"></i><span>Beranda</span><span class="ripple"></span>
-    </button>
-    <button class="bar-item" data-target="tab-jadwal" aria-label="Jadwal">
-      <i data-lucide="calendar"></i><span>Jadwal</span><span class="ripple"></span>
-    </button>
-    <button class="bar-item" data-target="tab-jobdesk" aria-label="Job Desk">
-      <i data-lucide="briefcase"></i><span>Job Desk</span><span class="ripple"></span>
-    </button>
-    <button class="bar-item" data-target="tab-laporan" aria-label="Laporan">
-      <i data-lucide="file-text"></i><span>Laporan</span><span class="ripple"></span>
-    </button>
-    <button class="bar-item" data-target="tab-absensi" aria-label="Absensi">
-      <i data-lucide="clipboard-check"></i><span>Absensi</span><span class="ripple"></span>
-    </button>
-    <button class="bar-item" data-target="tab-lainnya" aria-label="Lainnya">
-      <i data-lucide="more-horizontal"></i><span>Lainnya</span><span class="ripple"></span>
-    </button>
-  </nav>
-</body>
-</html>
-<!-- partial -->
-  <script  src="./script.js"></script>
+  <script>
+    const pekerjaanContainer = document.getElementById("pekerjaan-container");
+
+    const namaKaryawan = [
+      "Pohara Ayub", "Sadulloh", "Edi Ahmad Jubaedi", "Saiful Bahri", "Wahidin",
+      "Amrullah", "Ade Surahman", "Siti Maemunah", "Sulaiman", "Muhammad Toni", "M. Rifai"
+    ];
+
+    for (let i = 1; i <= 20; i++) {
+      let opsi = namaKaryawan.map(nama => `<option value="${nama}">${nama}</option>`).join("");
+      pekerjaanContainer.innerHTML += `
+        <label>Pekerjaan ${i}</label>
+        <input type="text" placeholder="Deskripsi pekerjaan ${i}" id="pekerjaan${i}" />
+        <select id="karyawan${i}">
+          <option value="">-- Pilih Karyawan --</option>
+          ${opsi}
+        </select>
+        <div class="durasi-group">
+          <input type="time" id="dari${i}" />
+          <input type="time" id="ke${i}" />
+        </div>
+      `;
+    }
+
+    function updateHari() {
+      const inputTanggal = document.getElementById("tanggal").value;
+      if (!inputTanggal) return;
+      const tanggal = new Date(inputTanggal);
+      const namaHari = tanggal.toLocaleDateString('id-ID', { weekday: 'long' });
+      document.getElementById("hari").innerText = `Hari: ${namaHari}`;
+    }
+
+    function hitungDurasi(jamMulai, jamSelesai) {
+      if (!jamMulai || !jamSelesai) return "";
+      const [h1, m1] = jamMulai.split(":").map(Number);
+      const [h2, m2] = jamSelesai.split(":").map(Number);
+      const totalMenit = (h2 * 60 + m2) - (h1 * 60 + m1);
+      if (totalMenit <= 0) return "";
+      const jam = Math.floor(totalMenit / 60);
+      const menit = totalMenit % 60;
+      let hasil = "";
+      if (jam > 0) hasil += `${jam} jam`;
+      if (menit > 0) hasil += jam > 0 ? ` ${menit} menit` : `${menit} menit`;
+      return hasil ? `(${hasil})` : "";
+    }
+
+    function generateClipboard() {
+      const tanggal = document.getElementById("tanggal").value;
+      if (!tanggal) {
+        alert("Silakan pilih tanggal terlebih dahulu!");
+        return;
+      }
+
+      const hari = new Date(tanggal).toLocaleDateString('id-ID', { weekday: 'long' });
+      let output = `🗓️  *Job Desk OCS NFI - ${hari}, ${tanggal}*\n\n`;
+
+      for (let i = 1; i <= 20; i++) {
+        const kerja = document.getElementById(`pekerjaan${i}`).value.trim();
+        const nama = document.getElementById(`karyawan${i}`).value.trim();
+        const dari = document.getElementById(`dari${i}`).value;
+        const ke = document.getElementById(`ke${i}`).value;
+        const durasi = hitungDurasi(dari, ke);
+        if (kerja || nama || dari || ke) {
+          output += `📌  ${kerja}  -  ${nama}  ${durasi}\n`;
+        }
+      }
+
+      document.getElementById("hasil").innerText = output;
+      navigator.clipboard.writeText(output).then(() => {
+        alert("📋 Job desk berhasil disalin!");
+      });
+    }
+  </script>
 
 </body>
 </html>
