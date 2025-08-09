@@ -7,47 +7,75 @@
   <style>
     body {
       font-family: Arial, sans-serif;
-      padding: 1rem;
+      padding: 0;
       margin: 0;
-      background: #f3f3f3;
+      background: #f5f6fa;
     }
 
     h2 {
       text-align: center;
-      margin-bottom: 1rem;
+      margin: 0;
+      padding: 1rem;
+      background: #0d47a1;
+      color: #fff;
+      font-size: 1.4rem;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.2);
     }
 
     .container {
-      background: #fff;
       padding: 1rem;
-      border-radius: 10px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-      margin-bottom: 1rem;
+      max-width: 900px;
+      margin: auto;
     }
 
     label {
       font-weight: bold;
-      margin-top: 1rem;
+      margin-top: 0.5rem;
       display: block;
+      font-size: 0.95rem;
     }
 
     input, select {
       width: 100%;
       padding: 0.5rem;
       margin-top: 0.3rem;
-      margin-bottom: 1rem;
       border: 1px solid #ccc;
       border-radius: 8px;
       font-size: 1rem;
+      box-sizing: border-box;
     }
 
+    .pekerjaan-card {
+      background: #fff;
+      padding: 1rem;
+      border-radius: 10px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+      margin-bottom: 1rem;
+    }
+
+    /* Grup Durasi */
     .durasi-group {
       display: flex;
       gap: 0.5rem;
+      align-items: flex-end;
+      margin-top: 0.5rem;
     }
-
-    .durasi-group input {
+    .durasi-item {
       flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    .durasi-item label {
+      font-weight: normal;
+      font-size: 0.85rem;
+      margin-bottom: 0.2rem;
+      color: #555;
+    }
+    .durasi-item input {
+      padding: 0.4rem;
+      font-size: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 8px;
     }
 
     button {
@@ -58,6 +86,12 @@
       border-radius: 8px;
       font-size: 1rem;
       width: 100%;
+      cursor: pointer;
+      margin-top: 1rem;
+    }
+
+    button:hover {
+      background: #1565c0;
     }
 
     #hasil {
@@ -66,17 +100,35 @@
       padding: 1rem;
       border-radius: 10px;
       margin-top: 1rem;
+      font-size: 0.95rem;
+    }
+
+    /* Mobile */
+    @media (max-width: 600px) {
+      .durasi-group {
+        flex-direction: column;
+      }
     }
   </style>
 </head>
 <body>
 
-  <h2>Job Desk OCS NFI</h2>
+  <h2>Job Desk Input Grup OCS NFI</h2>
 
   <div class="container">
-    <label for="tanggal">Pilih Hari dan Tanggal:</label>
-    <input type="date" id="tanggal" onchange="updateHari()" />
-    <div id="hari"></div>
+    <div class="pekerjaan-card">
+      <label for="tanggal">Pilih Hari dan Tanggal:</label>
+      <input type="date" id="tanggal" onchange="updateHari()" />
+      <div id="hari" style="margin: 0.5rem 0; font-weight: bold; color: #0d47a1;"></div>
+
+      <label for="shift">Shift:</label>
+      <select id="shift">
+        <option value="">-- Pilih Shift --</option>
+        <option value="Shift Pagi">Shift Pagi</option>
+        <option value="Shift Siang">Shift Siang</option>
+        <option value="Shift Malam">Shift Malam</option>
+      </select>
+    </div>
 
     <div id="pekerjaan-container"></div>
 
@@ -96,15 +148,24 @@
     for (let i = 1; i <= 20; i++) {
       let opsi = namaKaryawan.map(nama => `<option value="${nama}">${nama}</option>`).join("");
       pekerjaanContainer.innerHTML += `
-        <label>Pekerjaan ${i}</label>
-        <input type="text" placeholder="Deskripsi pekerjaan ${i}" id="pekerjaan${i}" />
-        <select id="karyawan${i}">
-          <option value="">-- Pilih Karyawan --</option>
-          ${opsi}
-        </select>
-        <div class="durasi-group">
-          <input type="time" id="dari${i}" />
-          <input type="time" id="ke${i}" />
+        <div class="pekerjaan-card">
+          <label>Pekerjaan ${i}</label>
+          <input type="text" placeholder="Deskripsi pekerjaan ${i}" id="pekerjaan${i}" />
+          <label>Nama Karyawan</label>
+          <select id="karyawan${i}">
+            <option value="">-- Pilih Karyawan --</option>
+            ${opsi}
+          </select>
+          <div class="durasi-group">
+            <div class="durasi-item">
+              <label for="dari${i}">Dari</label>
+              <input type="time" id="dari${i}" />
+            </div>
+            <div class="durasi-item">
+              <label for="ke${i}">Ke</label>
+              <input type="time" id="ke${i}" />
+            </div>
+          </div>
         </div>
       `;
     }
@@ -133,13 +194,16 @@
 
     function generateClipboard() {
       const tanggal = document.getElementById("tanggal").value;
+      const shift = document.getElementById("shift").value;
       if (!tanggal) {
         alert("Silakan pilih tanggal terlebih dahulu!");
         return;
       }
 
       const hari = new Date(tanggal).toLocaleDateString('id-ID', { weekday: 'long' });
-      let output = `🗓️  *Job Desk OCS NFI - ${hari}, ${tanggal}*\n\n`;
+      let output = `🗓️  *Job Desk OCS NFI - ${hari}, ${tanggal}*\n`;
+      if (shift) output += `🕒  Shift: ${shift}\n\n`;
+      else output += `\n`;
 
       for (let i = 1; i <= 20; i++) {
         const kerja = document.getElementById(`pekerjaan${i}`).value.trim();
@@ -148,7 +212,7 @@
         const ke = document.getElementById(`ke${i}`).value;
         const durasi = hitungDurasi(dari, ke);
         if (kerja || nama || dari || ke) {
-          output += `📌  ${kerja}  -  ${nama}  ${durasi}\n`;
+          output += `📌  ${kerja}  -  ${nama}  ${dari} - ${ke} ${durasi}\n`;
         }
       }
 
